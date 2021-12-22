@@ -32,14 +32,11 @@ object BaiduAIPAPI {
         return body.toString().post(textCensorUrl, "application/json", true)
     }
 
-    suspend fun getToken(): String {
+    suspend fun getToken(): JsonObject {
         var url = authUrl
         url += "&client_id=$client_id"
         url += "&client_secret=$client_secret"
-        val token = "{}".post(url, "")["access_token"]
-        if (token != null)
-            return token.toString()
-        else throw NoSuchElementException("获取失败！")
+        return "{}".post(url, "")
     }
 
     suspend fun Image.imageCensor(): JsonObject {

@@ -30,8 +30,14 @@ object BotSelfCensor : KotlinPlugin(
         if (Config.verifyType == Config.ApiType.Normal && (Config.client_id.isBlank() || Config.client_id.isBlank())) logger.error { "未设置ClientId或ClientSecret！" }
         if (Config.verifyType == Config.ApiType.Sample && Data.cookie.isBlank()) logger.error { "未设置Cookie！" }
         this.launch {
-            if (Data.access_token.isEmpty()) {
-                run { Data.access_token = getToken() }
+            if (Data.access_token.isEmpty() || System.currentTimeMillis() >= Data.access_date) {
+                val tokenInfo = getToken()
+                if (tokenInfo["access_token"] == null) {
+                    logger.error { "获取失败！" }
+                    return@launch
+                }
+                Data.access_token =tokenInfo["access_token"].toString()
+                Data.access_date = System.currentTimeMillis() + (tokenInfo["expires_in"].toString().toLong() * 1000)
             }
         }
         logger.info { "Plugin loaded" }
