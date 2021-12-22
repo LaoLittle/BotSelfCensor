@@ -9,7 +9,6 @@ import kotlinx.serialization.json.jsonObject
 import org.laolittle.plugin.Data
 
 object KtorHttpUtil {
-    const val censorUrl = "https://aip.baidubce.com/rest/2.0/solution/v1/text_censor/v2/user_defined"
     private val client = HttpClient(OkHttp)
 
     suspend fun String.post(url: String, type: String, useSample: Boolean = false): JsonObject {
